@@ -1,7 +1,6 @@
 package com.julietgisemba.bizcardapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -42,7 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.composeapp1.ui.theme.ComposeApp1Theme
 import com.julietgisemba.bizcardapp.ui.theme.BizCardAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -113,7 +111,7 @@ private fun CreateImageProfile() {
             shape = CircleShape
         ) {
             Image(
-                painter = painterResource(id = R.drawable.profile_image),
+                painter = painterResource(id = R.drawable.ic_profile),
                 contentDescription = "profile image"
             )
         }
@@ -176,7 +174,7 @@ fun Portfolio(data: List<String>) {
                             .size(130.dp),
                         shape = CircleShape
                     ) {
-                        Image(painter = painterResource(id = R.drawable.avator),
+                        Image(painter = painterResource(id = R.drawable.ic_avator),
                             contentDescription = "profile image")
                     }
                     Column(modifier = Modifier
