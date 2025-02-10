@@ -26,7 +26,7 @@ object AppModule {
         Room.databaseBuilder(
             context,
             SavingTransactionDatabase::class.java,
-            "transaction"
+            "saving_transaction"
         ).fallbackToDestructiveMigration()
             .build()
 

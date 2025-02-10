@@ -6,7 +6,12 @@ import com.julietgisemba.smartsaving.model.SavingTransaction
 import com.julietgisemba.smartsaving.repository.SavingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,14 +33,25 @@ class SavingViewModel @Inject constructor(private var repository: SavingReposito
 
     fun updateStartAmount(amount: Double) {
         startAmount = amount
-        calculateSavings()
+        viewModelScope.launch {
+            calculateSavings()
+        }
     }
 
-    fun calculateSavings(){
+    fun calculateCurrentWeek(startDate: LocalDate): Int {
+        val now = LocalDate.now()
+        return ChronoUnit.WEEKS.between(startDate, now).toInt() + 1
+    }
+
+    private suspend fun calculateSavings(){
         val savingsList = mutableListOf<SavingTransaction>()
-        for (week in 1..52){
-            val weeklyAmount = week * startAmount
-            savingsList.add(SavingTransaction(week = week, amount = weeklyAmount))
+        val startDate = repository.getStartDate() ?: return
+        val currentWeek = calculateCurrentWeek(startDate)
+
+        var currentAmount = startAmount
+        for (week in 1..currentWeek){
+            savingsList.add(SavingTransaction(week = week, amount = currentAmount))
+            currentAmount += startAmount
         }
         _totalSavings.value = savingsList
     }

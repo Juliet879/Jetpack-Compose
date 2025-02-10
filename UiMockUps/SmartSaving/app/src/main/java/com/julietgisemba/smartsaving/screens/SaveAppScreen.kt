@@ -63,7 +63,7 @@ fun SaveApp(
             value = startingAmount,
             onValueChange = {
                 startingAmount = it
-                updateStartAmount(it.toDouble())
+//                updateStartAmount(it.toDouble())
             },
             label = { Text(text = "Enter amount..") },
             modifier = Modifier
@@ -106,7 +106,7 @@ fun SaveApp(
                                     fontWeight = FontWeight.Light
                                 )
                             ) {
-                                append("Week 1  ")
+                                append("Week ${saving.week} -> ")
                             }
                             withStyle(
                                 style = SpanStyle(

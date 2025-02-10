@@ -6,16 +6,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.util.Date
 import javax.inject.Inject
 
 class SavingRepository @Inject constructor(private var savingsDao: SavingTransactionDao) {
-    suspend fun getAllTransactions(): Flow<List<SavingTransaction>> =
+    fun getAllTransactions(): Flow<List<SavingTransaction>> =
         savingsDao.getAllTransactions()
             .flowOn(Dispatchers.IO)
 
     suspend fun addSavings(transaction: SavingTransaction){
         withContext(Dispatchers.IO){
             savingsDao.addSavings(transaction)
+        }
+    }
+
+    suspend fun getStartDate(): LocalDate? {
+        return withContext(Dispatchers.IO) {
+            savingsDao.getStartDate()
         }
     }
 }
