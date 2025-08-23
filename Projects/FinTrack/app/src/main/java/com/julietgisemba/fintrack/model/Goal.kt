@@ -1,3 +1,7 @@
 package com.julietgisemba.fintrack.model
 
-class Goal()
+data class Goal(
+    val title: String,
+    val saved: Double,
+    val target: Double
+)

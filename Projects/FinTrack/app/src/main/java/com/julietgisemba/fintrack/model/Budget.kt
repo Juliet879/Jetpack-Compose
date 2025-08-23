@@ -2,4 +2,9 @@ package com.julietgisemba.fintrack.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
-class Budget()
+data class Budget(
+    val title: String,
+    val spent: Double,
+    val limit: Double,
+    val icon: ImageVector
+)
