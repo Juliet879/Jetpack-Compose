@@ -8,5 +8,7 @@ data class Transaction (
     val category: String,
     val icon: ImageVector,
     val amount: Double,
-    val isIncome: Boolean
+    val isIncome: Boolean,
+    val type: String = if (isIncome) "Income" else "Expense"
+
 )

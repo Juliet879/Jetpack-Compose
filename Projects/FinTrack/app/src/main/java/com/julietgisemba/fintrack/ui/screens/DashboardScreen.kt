@@ -1,14 +1,13 @@
 package com.julietgisemba.fintrack.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,14 +20,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -41,11 +39,11 @@ import com.julietgisemba.fintrack.model.Budget
 import com.julietgisemba.fintrack.model.Goal
 import com.julietgisemba.fintrack.model.Transaction
 import com.julietgisemba.fintrack.ui.components.ActionButton
-import com.julietgisemba.fintrack.ui.components.BottomBar
-import com.julietgisemba.fintrack.ui.components.BudgetItem
 import com.julietgisemba.fintrack.ui.components.DashboardCard
 import com.julietgisemba.fintrack.ui.components.GoalItem
 import com.julietgisemba.fintrack.ui.components.TransactionItem
+import com.julietgisemba.fintrack.ui.components.BudgetItem
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +56,8 @@ fun DashboardScreen() {
                     fontWeight = FontWeight.Bold
                 )}
             )
-        }
+        },
+        containerColor = Color(0x54EFFBF6)
     ) { innerPadding ->
 
     val transactions = listOf(
@@ -79,17 +78,21 @@ fun DashboardScreen() {
     )
 
     Column(
-        modifier = Modifier.padding(20.dp, 10.dp).padding(innerPadding)
+        modifier = Modifier.padding(15.dp, 0.dp, 10.dp).padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
-
-        Spacer(Modifier.height(10.dp))
         HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(
             value = "",
             onValueChange = {},
-            placeholder = { Text("Search transactions, budgets, goals", fontSize = 14.sp, color = Color.DarkGray) },
+            placeholder = {
+                Text(
+                    "Search transactions, budgets, goals",
+                    fontSize = 14.sp,
+                    color = Color.DarkGray
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") }
@@ -116,29 +119,53 @@ fun DashboardScreen() {
 
         Text("Recent transactions", fontSize = 20.sp, fontWeight = FontWeight.Medium)
         Spacer(Modifier.height(10.dp))
-        Card  {
-            transactions.take(3).forEach { transaction ->
-                TransactionItem(transaction)
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            border = BorderStroke(0.3.dp, Color.Gray),
+            modifier = Modifier
+        ) {
+            Column {
+                transactions.take(3).forEach { transaction ->
+                    TransactionItem(transaction)
+                }
             }
         }
         Spacer(Modifier.height(20.dp))
 
         Text("Budgets", fontSize = 20.sp, fontWeight = FontWeight.Medium)
         Spacer(Modifier.height(10.dp))
-        Card  {
-            budgets.take(3).forEach { budget ->
-                BudgetItem(budget)
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            border = BorderStroke(0.3.dp, Color.Gray),
+            modifier = Modifier
+        ) {
+            Column {
+                budgets.take(3).forEach { budget ->
+                    BudgetItem(
+                        budget.icon,
+                        budget.title,
+                        "${budget.spent} of",
+                        "${budget.limit}",
+                        (budget.spent / budget.limit).toFloat()
+                    )
+                }
             }
         }
         Spacer(Modifier.height(20.dp))
 
         Text("Goals", fontSize = 20.sp, fontWeight = FontWeight.Medium)
         Spacer(Modifier.height(10.dp))
-        Card  {
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            border = BorderStroke(0.3.dp, Color.Gray),
+            modifier = Modifier
+        ) {
+            Column {
             goals.take(3).forEach { goal ->
                 GoalItem(goal)
             }
         }
+    }
     }
 }
 }
