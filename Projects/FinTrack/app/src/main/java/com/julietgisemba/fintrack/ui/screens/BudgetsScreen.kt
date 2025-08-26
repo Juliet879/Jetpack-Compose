@@ -12,11 +12,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DividerDefaults
@@ -33,25 +32,53 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.julietgisemba.fintrack.model.Budget
-import com.julietgisemba.fintrack.model.UpcomingExpense
+import com.julietgisemba.fintrack.model.BudgetType
 import com.julietgisemba.fintrack.ui.components.BalanceSummaryItem
 import com.julietgisemba.fintrack.ui.components.BudgetItem
+import java. time.LocalDate
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BudgetsScreen() {
     val budgets = listOf(
-        Budget("Groceries", 186.0, 300.0, Icons.Default.ShoppingCart),
-        Budget("Transport", 40.0, 100.0, Icons.Default.Star),
-        Budget("Dining Out", 156.0, 200.0, Icons.Default.CheckCircle),
-        Budget("Utilities", 110.0, 200.0, Icons.Default.Build)
+        Budget(
+            icon = Icons.Default.ShoppingCart,
+            categoryName = "Groceries",
+            spent = 150.0,
+            limit = 300.0,
+            type = BudgetType.UPCOMING,
+            isRecurring = true
+        ),
+        Budget(
+            icon = Icons.Default.Home,
+            categoryName = "Rent",
+            spent = 500.0,
+            limit = 500.0,
+            type = BudgetType.FIXED,
+            isRecurring = true
+        ),
+        Budget(
+            icon = Icons.Default.LocationOn,
+            categoryName = "Vacation",
+            spent = 0.0,
+            limit = 1200.0,
+            type = BudgetType.UPCOMING,
+            startDate = LocalDate.of(2025, 9, 1),
+            endDate = LocalDate.of(2025, 9, 15)
+        ),
+        Budget(
+            icon = Icons.Default.ThumbUp,
+            categoryName = "Dining Out",
+            spent = 50.0,
+            limit = 200.0,
+            type = BudgetType.UPCOMING
+        )
     )
 
-    val upcomingExpenses = listOf(
-        UpcomingExpense("Rent", "Due Sep 1", 1200.0),
-        UpcomingExpense("Internet", "Due Aug 28", 60.0)
-    )
+    val fixedBudgets = budgets.filter { it.type == BudgetType.FIXED }
+    val upcomingBudgets = budgets.filter { it.type == BudgetType.UPCOMING }
+
     val planned = budgets.sumOf { it.limit }
     val spent = budgets.sumOf { it.spent }
     val remaining = planned - spent
@@ -105,12 +132,12 @@ fun BudgetsScreen() {
                 modifier = Modifier
             ) {
                 LazyColumn(modifier = Modifier.padding(12.dp)) {
-                    items(budgets) { budget ->
+                    items(upcomingBudgets) { budget ->
                         BudgetItem(
                             budget.icon,
-                            budget.title,
-                            "$${budget.spent.roundToInt()} of",
-                            "$${budget.limit.roundToInt()}",
+                            budget.categoryName,
+                            budget.spent,
+                            budget.limit,
                             (budget.spent / budget.limit).toFloat(),
                             false,
                             "$${(budget.limit - budget.spent).roundToInt()} left",
@@ -118,7 +145,31 @@ fun BudgetsScreen() {
                             )
                     }
                 }
+            }
+            Spacer(Modifier.height(20.dp))
 
+            Text("Fixed Budget", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+
+            Spacer(Modifier.height(20.dp))
+            Surface(
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(0.3.dp, Color.Gray),
+                modifier = Modifier
+            ) {
+                LazyColumn(modifier = Modifier.padding(12.dp)) {
+                    items(fixedBudgets) { budget ->
+                        BudgetItem(
+                            budget.icon,
+                            budget.categoryName,
+                            budget.spent,
+                            budget.limit,
+                            (budget.spent / budget.limit).toFloat(),
+                            false,
+                            "$${(budget.limit - budget.spent).roundToInt()} left",
+
+                            )
+                    }
+                }
             }
 
         }

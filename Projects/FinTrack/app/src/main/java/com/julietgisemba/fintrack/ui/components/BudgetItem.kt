@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -26,13 +25,15 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
 
 @Composable
 fun BudgetItem(
     icon: ImageVector,
     categoryName: String,
-    amountSpent: String,
-    budgetLimit: String,
+    amountSpent: Double,
+    budgetLimit: Double,
     progress: Float,
     compact: Boolean = true, // true = dashboard, false = detailed
     remainingAmount: String? = null, // null = dashboard, non-null = detailed
@@ -73,17 +74,29 @@ fun BudgetItem(
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = "$amountSpent of $budgetLimit",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                text = "$${amountSpent.roundToInt()} of $${budgetLimit.roundToInt()}",
+                fontSize = 14.sp, fontWeight = FontWeight.Light
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
+            if (!compact) {
+                LinearProgressIndicator(
+                    progress = progress,
+                    modifier =Modifier
+                        .width(120.dp)
+                        .height(if (compact) 6.dp else 8.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    color = Color(0xFF2C8A5B),
+                    trackColor = Color.LightGray,
+                )
+            }
+        }
+        if (compact) {
             LinearProgressIndicator(
                 progress = progress,
                 modifier = Modifier
-                    .then(if (compact) Modifier.width(120.dp) else Modifier.fillMaxWidth())
+                    .weight(1f)
                     .height(if (compact) 6.dp else 8.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 color = Color(0xFF2C8A5B),
@@ -96,9 +109,8 @@ fun BudgetItem(
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = remainingAmount,
-                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = if (remainingAmount.startsWith("-")) Color.Red else MaterialTheme.colorScheme.primary
+                color = if (remainingAmount.startsWith("-")) Color.Red else Color.Black
             )
         }
     }
