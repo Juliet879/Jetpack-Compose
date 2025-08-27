@@ -176,7 +176,7 @@ fun DashboardScreen() {
                         BudgetItem(
                             budget.icon,
                             budget.categoryName,
-                            budget.spent,
+                            budget. spent,
                             budget.limit,
                             (budget.spent / budget.limit).toFloat()
                         )
