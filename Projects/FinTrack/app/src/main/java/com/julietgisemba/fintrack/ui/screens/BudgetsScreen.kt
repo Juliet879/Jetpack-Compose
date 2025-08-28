@@ -35,6 +35,8 @@ import com.julietgisemba.fintrack.model.Budget
 import com.julietgisemba.fintrack.model.BudgetType
 import com.julietgisemba.fintrack.ui.components.BalanceSummaryItem
 import com.julietgisemba.fintrack.ui.components.BudgetItem
+import com.julietgisemba.fintrack.ui.components.QuickAddController
+import java.text.SimpleDateFormat
 import java. time.LocalDate
 import kotlin.math.roundToInt
 
@@ -43,7 +45,6 @@ import kotlin.math.roundToInt
 fun BudgetsScreen() {
     val budgets = listOf(
         Budget(
-            icon = Icons.Default.ShoppingCart,
             categoryName = "Groceries",
             spent = 150.0,
             limit = 300.0,
@@ -51,7 +52,6 @@ fun BudgetsScreen() {
             isRecurring = true
         ),
         Budget(
-            icon = Icons.Default.Home,
             categoryName = "Rent",
             spent = 500.0,
             limit = 500.0,
@@ -59,22 +59,21 @@ fun BudgetsScreen() {
             isRecurring = true
         ),
         Budget(
-            icon = Icons.Default.LocationOn,
             categoryName = "Vacation",
             spent = 0.0,
             limit = 1200.0,
             type = BudgetType.UPCOMING,
-            startDate = LocalDate.of(2025, 9, 1),
-            endDate = LocalDate.of(2025, 9, 15)
+            startDate = SimpleDateFormat("yyyy-MM-dd").parse("2025-09-01"),
+            endDate = SimpleDateFormat("yyyy-MM-dd").parse("2025-09-15")
         ),
         Budget(
-            icon = Icons.Default.ThumbUp,
             categoryName = "Dining Out",
             spent = 50.0,
             limit = 200.0,
             type = BudgetType.UPCOMING
         )
     )
+
 
     val fixedBudgets = budgets.filter { it.type == BudgetType.FIXED }
     val upcomingBudgets = budgets.filter { it.type == BudgetType.UPCOMING }
@@ -96,7 +95,10 @@ fun BudgetsScreen() {
                     Text("+ Add")
                 }
             })
-        }, containerColor = Color(0x54EFFBF6)
+        }, containerColor = Color(0x54EFFBF6),
+        floatingActionButton = {
+            FloatingQuickAddButton(quickAddController)
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier

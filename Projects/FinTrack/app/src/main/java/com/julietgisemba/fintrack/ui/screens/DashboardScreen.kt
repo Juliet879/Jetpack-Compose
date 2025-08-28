@@ -12,18 +12,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material3.Card
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -32,25 +28,37 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx. compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.julietgisemba.fintrack.model.Budget
 import com.julietgisemba.fintrack.model.BudgetType
 import com.julietgisemba.fintrack.model.Goal
-import com.julietgisemba.fintrack.model.Transaction
+import com.julietgisemba.fintrack.model.QuickAddType
+import com.julietgisemba.fintrack.model.TransactionEntity
+import com.julietgisemba.fintrack.model.TransactionType
 import com.julietgisemba.fintrack.ui.components.ActionButton
 import com.julietgisemba.fintrack.ui.components.DashboardCard
 import com.julietgisemba.fintrack.ui.components.GoalItem
 import com.julietgisemba.fintrack.ui.components.TransactionItem
 import com.julietgisemba.fintrack.ui.components.BudgetItem
-import java.time.LocalDate
+import com.julietgisemba.fintrack.ui.components.QuickAddSheet
+import com.julietgisemba.fintrack.viewmodel.FinanceViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen( viewmodel: FinanceViewModel = hiltViewModel()) {
+    var showQuickAdd by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,44 +67,66 @@ fun DashboardScreen() {
                         text = "FinTrack", fontWeight = FontWeight.Bold
                     )
                 })
-        }, containerColor = Color(0x54EFFBF6)
+        }, containerColor = Color(0x54EFFBF6),
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showQuickAdd = true }) {
+                Icon(Icons.Default.Add, contentDescription = "Quick Add")
+            }
+        }
     ) { innerPadding ->
 
-        val transactions = listOf(
-            Transaction(
-                "Groceries", "Aug 18", "Food", Icons.Default.ShoppingCart, -54.20, isIncome = false
-            ), Transaction(
-                "Salary", "Aug 15", "Income", Icons.Default.DateRange, 2800.00, isIncome = true
-            ), Transaction(
-                "Transport", "Aug 14", "Commute", Icons.Default.ThumbUp, -18.60, isIncome = false
+        val transactionEntities = listOf(
+            TransactionEntity(
+                title = "Groceries",
+                date = SimpleDateFormat("MMM dd", Locale.getDefault()).parse("Aug 18")!!,
+                category = "Food",
+                amount = -54.20,
+                isIncome = false,
+                type = TransactionType.EXPENSE
+            ),
+            TransactionEntity(
+                title = "Salary",
+                date = SimpleDateFormat("MMM dd", Locale.getDefault()).parse("Aug 15")!!,
+                category = "Income",
+                amount = 2800.00,
+                isIncome = true,
+                type = TransactionType.INCOME
+            ),
+            TransactionEntity(
+                title = "Transport",
+                date = SimpleDateFormat("MMM dd", Locale.getDefault()).parse("Aug 14")!!,
+                category = "Commute",
+                amount = -18.60,
+                isIncome = false,
+                type = TransactionType.EXPENSE
             )
         )
 
+
         val budgets = listOf(
             Budget(
-                icon = Icons.Default.ShoppingCart,
                 categoryName = "Groceries",
                 spent = 150.0,
                 limit = 300.0,
                 type = BudgetType.FIXED,
                 isRecurring = true
-            ), Budget(
-                icon = Icons.Default.Home,
+            ),
+            Budget(
                 categoryName = "Rent",
                 spent = 500.0,
                 limit = 500.0,
                 type = BudgetType.FIXED,
                 isRecurring = true
-            ), Budget(
-                icon = Icons.Default.LocationOn,
+            ),
+            Budget(
                 categoryName = "Vacation",
                 spent = 0.0,
                 limit = 1200.0,
                 type = BudgetType.UPCOMING,
-                startDate = LocalDate.of(2025, 9, 1),
-                endDate = LocalDate.of(2025, 9, 15)
-            ), Budget(
-                icon = Icons.Default.ThumbUp,
+                startDate = SimpleDateFormat("yyyy-MM-dd").parse("2025-09-01"),
+                endDate = SimpleDateFormat("yyyy-MM-dd").parse("2025-09-15")
+            ),
+            Budget(
                 categoryName = "Dining Out",
                 spent = 50.0,
                 limit = 200.0,
@@ -104,11 +134,18 @@ fun DashboardScreen() {
             )
         )
 
-        val goals = listOf(
-            Goal("Emergency Fund", saved = 3600.0, target = 5000.0),
-            Goal("Vacation", saved = 1800.0, target = 3000.0)
+        val goals =  listOf(
+            Goal(
+                title = "Emergency Fund",
+                saved = 3600.0,
+                target = 5000.0
+            ),
+            Goal(
+                title = "Vacation",
+                saved = 1800.0,
+                target = 3000.0
+            )
         )
-
         Column(
             modifier = Modifier
                 .padding(15.dp, 0.dp, 10.dp)
@@ -157,7 +194,7 @@ fun DashboardScreen() {
                 modifier = Modifier
             ) {
                 Column {
-                    transactions.take(3).forEach { transaction ->
+                    transactionEntities.take(3).forEach { transaction ->
                         TransactionItem(transaction)
                     }
                 }
@@ -199,5 +236,19 @@ fun DashboardScreen() {
                 }
             }
         }
+    }
+
+    if (showQuickAdd) {
+        QuickAddSheet(
+            type = QuickAddType.Transaction,
+            onDismiss = { showQuickAdd = false },
+            onSaveTransaction = { amount, category, title, note, isIncome ->
+                if (isIncome) {
+                    viewmodel.addIncome(amount, category, title, note)
+                } else {
+                    viewmodel.addExpense(amount, category, title, note)
+                }
+            }
+        )
     }
 }

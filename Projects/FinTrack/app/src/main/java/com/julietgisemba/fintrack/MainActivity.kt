@@ -7,19 +7,28 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.julietgisemba.fintrack.navigation.AppNavHost
 import com.julietgisemba.fintrack.navigation.Destinations
 import com.julietgisemba.fintrack.ui.components.BottomBar
+import com.julietgisemba.fintrack.ui.components.QuickAddController
 import com.julietgisemba.fintrack.ui.theme.FinTrackTheme
+import com.julietgisemba.fintrack.viewmodel.FinanceViewModel
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,12 +42,30 @@ class MainActivity : ComponentActivity() {
                 Destinations.Profile
             )
 
+            val scope = rememberCoroutineScope()
+            val quickAddController = remember { QuickAddController() }
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            quickAddController.sheetState = sheetState
+
             Scaffold(
                 bottomBar = {
                     BottomBar(navController = navController, destinations = items)
                 }
             ) { innerPadding ->
-                AppNavHost(navController = navController, modifier = Modifier.padding(innerPadding))
-            }        }
+//                if (quickAddController.quickAddData != null) {
+//                    ModalBottomSheet(
+//                        sheetState = sheetState,
+//                        onDismissRequest = { quickAddController.quickAddData = null }
+//                    ) {
+//
+//                    }
+//                }
+                AppNavHost(
+                    navController = navController,
+                    modifier = Modifier.padding(innerPadding),
+                    hiltViewModel()
+                )
+            }
+        }
     }
 }

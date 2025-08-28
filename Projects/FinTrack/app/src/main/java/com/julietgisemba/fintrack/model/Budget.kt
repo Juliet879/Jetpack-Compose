@@ -1,21 +1,25 @@
 package com.julietgisemba.fintrack.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import java.time.LocalDate
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import com.julietgisemba.fintrack.ui.components.CategoryIconMapper
+import java.util.Date
 
+@Entity(tableName = "budgets")
 data class Budget(
     val categoryName: String,
-    val spent: Double,
     val limit: Double,
-    val icon: ImageVector,
-    val type: BudgetType,
-    val startDate: LocalDate? = null, // for upcoming
-    val endDate: LocalDate? = null,   // for upcoming
-    val isRecurring: Boolean = false
-)
-
-
-enum class BudgetType {
-    UPCOMING,
-    FIXED
+    val spent: Double = 0.0,
+    val type: BudgetType,        // FIXED, UPCOMING
+    val isRecurring: Boolean = false,
+    val startDate: Date? = null,
+    val endDate: Date? = null,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    ) {
+    @Ignore
+    val icon: ImageVector = CategoryIconMapper.getIcon(categoryName)
 }
+enum class BudgetPeriod { WEEKLY, MONTHLY, YEARLY }
+enum class BudgetType { FIXED, UPCOMING }

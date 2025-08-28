@@ -27,16 +27,43 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.julietgisemba.fintrack.model.Goal
 import com.julietgisemba.fintrack.ui.components.GoalItem
+import com.julietgisemba.fintrack.ui.components.QuickAddController
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalsScreen() {
     val goals = listOf(
-        Goal(title = "Vacation to Bali", saved = 500.0, target = 1500.0, monthsLeft = 5),
-        Goal(title = "New Laptop", saved = 800.0, target = 2000.0, monthsLeft = 3),
-        Goal(title = "Emergency Fund", saved = 1200.0, target = 5000.0, monthsLeft = 12),
-        Goal(title = "Car Down Payment", saved = 2500.0, target = 10000.0, monthsLeft = 8)
+        Goal(
+            title = "Vacation to Bali",
+            saved = 500.0,
+            target = 1500.0,
+            deadline = SimpleDateFormat("yyyy-MM-dd").parse("2025-12-31"),
+            isActive = true
+        ),
+        Goal(
+            title = "New Laptop",
+            saved = 800.0,
+            target = 2000.0,
+            deadline = SimpleDateFormat("yyyy-MM-dd").parse("2025-11-30"),
+            isActive = true
+        ),
+        Goal(
+            title = "Emergency Fund",
+            saved = 1200.0,
+            target = 5000.0,
+            deadline = SimpleDateFormat("yyyy-MM-dd").parse("2026-09-01"),
+            isActive = true
+        ),
+        Goal(
+            title = "Car Down Payment",
+            saved = 2500.0,
+            target = 10000.0,
+            deadline = SimpleDateFormat("yyyy-MM-dd").parse("2026-05-01"),
+            isActive = true
+        )
     )
+
 
     val emergencyFund = Goal("Emergency Fund", saved = 3600.0, target = 5000.0)
 
@@ -53,7 +80,10 @@ fun GoalsScreen() {
                     Text("+ New goal")
                 }
             })
-        }, containerColor = Color(0x54EFFBF6)
+        }, containerColor = Color(0x54EFFBF6),
+        floatingActionButton = {
+
+        }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(15.dp, 0.dp).padding(innerPadding)) {
             HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)

@@ -23,8 +23,6 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -44,9 +42,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.julietgisemba.fintrack.model.Transaction
+import com.julietgisemba.fintrack.model.TransactionEntity
+import com.julietgisemba.fintrack.model.TransactionType
 import com.julietgisemba.fintrack.ui.components.BalanceSummaryItem
+import com.julietgisemba.fintrack.ui.components.QuickAddController
 import com.julietgisemba.fintrack.ui.components.TransactionItem
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,30 +69,47 @@ fun TransactionsScreen() {
                     }
                 },
             )
-        }, containerColor = Color(0x54EFFBF6)
+        }, containerColor = Color(0x54EFFBF6),
+        floatingActionButton = {
+        }
     ) { innerPadding ->
 
         var selectedFilter by remember { mutableStateOf("All") }
-        val transactions = listOf(
-            Transaction(
-                "Groceries", "Aug 18", "Food", Icons.Default.ShoppingCart, -54.20, isIncome = false
-            ), Transaction(
-                "Salary", "Aug 15", "Income", Icons.Default.DateRange, 2800.00, isIncome = true
-            ), Transaction(
-                "Transport", "Aug 14", "Commute", Icons.Default.ThumbUp, -18.60, isIncome = false
-            ), Transaction(
-                "Freelance", "Aug 10", "Income", Icons.Default.DateRange, 500.00, isIncome = true
-            ), Transaction(
-                "Electricity", "Aug 09", "Utilities", Icons.Default.Place, -120.50, isIncome = false
+        val transactionEntities = listOf(
+            TransactionEntity(
+                title = "Groceries",
+                date = SimpleDateFormat("MMM dd", Locale.getDefault()).parse("Aug 18")!!,
+                category = "Food",
+                amount = -54.20,
+                isIncome = false,
+                type = TransactionType.EXPENSE
+            ),
+            TransactionEntity(
+                title = "Salary",
+                date = SimpleDateFormat("MMM dd", Locale.getDefault()).parse("Aug 15")!!,
+                category = "Income",
+                amount = 2800.00,
+                isIncome = true,
+                type = TransactionType.INCOME
+            ),
+            TransactionEntity(
+                title = "Transport",
+                date = SimpleDateFormat("MMM dd", Locale.getDefault()).parse("Aug 14")!!,
+                category = "Commute",
+                amount = -18.60,
+                isIncome = false,
+                type = TransactionType.EXPENSE
+
             )
         )
+
         val filteredTransaction = when (selectedFilter) {
-            "Income" -> transactions.filter { it.type == "Income" }
-            "Expense" -> transactions.filter { it.type == "Expense" }
-            else -> transactions
+            "Income" -> transactionEntities.filter { it.type == TransactionType.INCOME }
+            "Expense" -> transactionEntities.filter { it.type == TransactionType.EXPENSE }
+            else -> transactionEntities
         }
-        val totalIncome = transactions.filter { it.isIncome }.sumOf() { it.amount }
-        val totalExpense = transactions.filter { !it.isIncome }.sumOf() { it.amount }
+        val totalIncome = transactionEntities.filter { it.isIncome }.sumOf() { it.amount }
+        val totalExpense = transactionEntities.filter { !it.isIncome }.sumOf() { it.amount }
         val totalNet = totalIncome + totalExpense
 
 
@@ -154,7 +173,7 @@ fun TransactionsScreen() {
                     filteredTransaction.groupBy { it.date }.forEach { (date, items) ->
                         item {
                             Text(
-                                text = date,
+                                text = date.toString(),
                                 fontWeight = FontWeight.Light,
                                 modifier = Modifier.padding(8.dp)
                             )

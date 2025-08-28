@@ -1,6 +1,5 @@
 package com.julietgisemba.fintrack.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,22 +15,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.julietgisemba.fintrack.model.Transaction
+import com.julietgisemba.fintrack.model.TransactionEntity
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transactionEntity: TransactionEntity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        Icon(transaction.icon, contentDescription = "")
+        Icon(transactionEntity.icon, contentDescription = "")
         Spacer(Modifier.width(20.dp))
         Column {
-            Text(transaction.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-            Text("${transaction.date} - ${transaction.category}", fontSize = 14.sp, fontWeight = FontWeight.Light)
+            Text(transactionEntity.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            Text("${transactionEntity.date} - ${transactionEntity.category}", fontSize = 14.sp, fontWeight = FontWeight.Light)
         }
         Spacer(Modifier.weight(1f))
-        Text("$${transaction.amount}", fontSize = 16.sp, color = if (transaction.isIncome) Color. Green else Color. Red, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.End)
+        Text("$${transactionEntity.amount}", fontSize = 16.sp, color = if (transactionEntity.isIncome) Color. Green else Color. Red, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.End)
     }
 }
