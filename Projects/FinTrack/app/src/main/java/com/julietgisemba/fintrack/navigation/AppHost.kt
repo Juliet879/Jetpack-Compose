@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.julietgisemba.fintrack.ui.components.QuickAddController
 import com.julietgisemba.fintrack.ui.screens.BudgetsScreen
 import com.julietgisemba.fintrack.ui.screens.DashboardScreen
 import com.julietgisemba.fintrack.ui.screens.GoalsScreen

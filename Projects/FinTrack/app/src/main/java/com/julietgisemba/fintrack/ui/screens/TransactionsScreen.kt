@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import com.julietgisemba.fintrack.model.TransactionEntity
 import com.julietgisemba.fintrack.model.TransactionType
 import com.julietgisemba.fintrack.ui.components.BalanceSummaryItem
-import com.julietgisemba.fintrack.ui.components.QuickAddController
 import com.julietgisemba.fintrack.ui.components.TransactionItem
 import java.text.SimpleDateFormat
 import java.util.Locale

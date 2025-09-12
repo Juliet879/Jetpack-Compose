@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.julietgisemba.fintrack.model.Goal
 import com.julietgisemba.fintrack.ui.components.GoalItem
-import com.julietgisemba.fintrack.ui.components.QuickAddController
 import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)

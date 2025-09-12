@@ -35,7 +35,6 @@ import com.julietgisemba.fintrack.model.Budget
 import com.julietgisemba.fintrack.model.BudgetType
 import com.julietgisemba.fintrack.ui.components.BalanceSummaryItem
 import com.julietgisemba.fintrack.ui.components.BudgetItem
-import com.julietgisemba.fintrack.ui.components.QuickAddController
 import java.text.SimpleDateFormat
 import java. time.LocalDate
 import kotlin.math.roundToInt
@@ -97,7 +96,6 @@ fun BudgetsScreen() {
             })
         }, containerColor = Color(0x54EFFBF6),
         floatingActionButton = {
-            FloatingQuickAddButton(quickAddController)
         }
     ) { innerPadding ->
         Column(

@@ -7,6 +7,7 @@ import com.julietgisemba.fintrack.model.Budget
 import com.julietgisemba.fintrack.model.BudgetType
 import com.julietgisemba.fintrack.model.Goal
 import com.julietgisemba.fintrack.model.TransactionEntity
+import com.julietgisemba.fintrack.model.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -31,7 +32,8 @@ class FinanceViewModel @Inject constructor(
                     category = category,
                     amount = amount,
                     isIncome = true,
-                    note = note
+                    note = note,
+                    type = TransactionType.INCOME
                 )
             )
         }
@@ -51,7 +53,8 @@ class FinanceViewModel @Inject constructor(
                     category = category,
                     amount = amount,
                     isIncome = false,
-                    note = note
+                    note = note,
+                    type = TransactionType.EXPENSE
                 )
             )
             repository.updateBudget(category, amount)

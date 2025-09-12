@@ -23,10 +23,12 @@ import androidx.navigation.compose.rememberNavController
 import com.julietgisemba.fintrack.navigation.AppNavHost
 import com.julietgisemba.fintrack.navigation.Destinations
 import com.julietgisemba.fintrack.ui.components.BottomBar
-import com.julietgisemba.fintrack.ui.components.QuickAddController
 import com.julietgisemba.fintrack.ui.theme.FinTrackTheme
 import com.julietgisemba.fintrack.viewmodel.FinanceViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +43,6 @@ class MainActivity : ComponentActivity() {
                 Destinations.Goals,
                 Destinations.Profile
             )
-
-            val scope = rememberCoroutineScope()
-            val quickAddController = remember { QuickAddController() }
-            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            quickAddController.sheetState = sheetState
 
             Scaffold(
                 bottomBar = {
